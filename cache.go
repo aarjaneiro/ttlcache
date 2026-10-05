@@ -570,7 +570,7 @@ func (c *Cache[K, V]) Keys() []K {
 	c.items.mu.RLock()
 	defer c.items.mu.RUnlock()
 
-	res := make([]K, 0)
+	res := make([]K, 0, len(c.items.values))
 	for k, elem := range c.items.values {
 		if !elem.Value.(*Item[K, V]).isExpiredUnsafe() {
 			res = append(res, k)
@@ -586,7 +586,7 @@ func (c *Cache[K, V]) Items() map[K]*Item[K, V] {
 	c.items.mu.RLock()
 	defer c.items.mu.RUnlock()
 
-	items := make(map[K]*Item[K, V])
+	items := make(map[K]*Item[K, V], len(c.items.values))
 	for k, elem := range c.items.values {
 		item := elem.Value.(*Item[K, V])
 		if item != nil && !item.isExpiredUnsafe() {
